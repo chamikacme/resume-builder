@@ -1,7 +1,7 @@
 import { ResumeContent } from "@/lib/validations";
 
 export function ClassicTemplate({ content }: { content: ResumeContent }) {
-    const { personalInfo, experience, education, skills, projects, sectionOrder } = content;
+    const { personalInfo, experience, education, skills, projects, volunteering, certifications, awards, languages, sectionOrder } = content;
     const order = sectionOrder || ["experience", "education", "projects", "skills"];
 
     const renderSection = (section: string) => {
@@ -78,6 +78,78 @@ export function ClassicTemplate({ content }: { content: ResumeContent }) {
                         <h2 className="text-lg font-bold uppercase border-b border-black mb-3">Key Skills</h2>
                         <p className="text-sm leading-relaxed">
                             {skills.map(s => s.name).join(' • ')}
+                        </p>
+                    </section>
+                );
+            case "volunteering":
+                if (!volunteering?.length) return null;
+                return (
+                    <section key="volunteering" className="mb-6">
+                        <h2 className="text-lg font-bold uppercase border-b border-black mb-3">Volunteering</h2>
+                        <div className="space-y-4">
+                            {volunteering.map(vol => (
+                                <div key={vol.id}>
+                                    <div className="flex justify-between items-baseline font-bold">
+                                        <h3>{vol.role}</h3>
+                                        <span className="text-sm font-normal">
+                                            {vol.startDate} – {vol.current ? "Present" : vol.endDate}
+                                        </span>
+                                    </div>
+                                    <div className="italic mb-1">{vol.organization}</div>
+                                    <p className="text-sm text-justify whitespace-pre-line">
+                                        {vol.description}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                );
+            case "certifications":
+                if (!certifications?.length) return null;
+                return (
+                    <section key="certifications" className="mb-6">
+                        <h2 className="text-lg font-bold uppercase border-b border-black mb-3">Certifications</h2>
+                        <div className="space-y-2">
+                            {certifications.map(cert => (
+                                <div key={cert.id}>
+                                    <div className="flex justify-between items-baseline font-bold">
+                                        <h3>{cert.name}</h3>
+                                        <span className="text-sm font-normal">{cert.date}</span>
+                                    </div>
+                                    <div className="text-sm">
+                                        {cert.issuer} {cert.url && <a href={cert.url} className="text-xs underline text-blue-800 ml-1">(Link)</a>}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                );
+            case "awards":
+                if (!awards?.length) return null;
+                return (
+                    <section key="awards" className="mb-6">
+                        <h2 className="text-lg font-bold uppercase border-b border-black mb-3">Honors & Awards</h2>
+                        <div className="space-y-3">
+                            {awards.map(award => (
+                                <div key={award.id}>
+                                    <div className="flex justify-between items-baseline font-bold">
+                                        <h3>{award.title}</h3>
+                                        <span className="text-sm font-normal">{award.date}</span>
+                                    </div>
+                                    <div className="text-sm italic mb-1">{award.issuer}</div>
+                                    {award.description && <p className="text-sm text-justify">{award.description}</p>}
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                );
+            case "languages":
+                if (!languages?.length) return null;
+                return (
+                    <section key="languages" className="mb-6">
+                        <h2 className="text-lg font-bold uppercase border-b border-black mb-3">Languages</h2>
+                        <p className="text-sm leading-relaxed">
+                            {languages.map(lang => `${lang.language}${lang.proficiency ? ` (${lang.proficiency})` : ''}`).join(', ')}
                         </p>
                     </section>
                 );

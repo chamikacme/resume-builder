@@ -53,6 +53,10 @@ const SECTION_LABELS: Record<string, string> = {
     education: "Education",
     skills: "Skills",
     projects: "Projects",
+    volunteering: "Volunteering",
+    certifications: "Certifications",
+    awards: "Awards",
+    languages: "Languages",
 };
 
 export function SectionReorder({ order, onOrderChange }: SectionReorderProps) {

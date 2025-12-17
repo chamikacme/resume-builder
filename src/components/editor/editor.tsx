@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { ResumeContent } from "@/lib/validations";
+import { ResumeContent, resumeContentSchema } from "@/lib/validations";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Download, Loader2 } from "lucide-react";
+import { ArrowLeft, Download, Loader2, LayoutList } from "lucide-react";
 import Link from "next/link";
 import { updateResume } from "@/app/actions/resume";
 import { toast } from "sonner";
@@ -15,10 +15,15 @@ import { ExperienceForm } from "./forms/experience-form";
 import { EducationForm } from "./forms/education-form";
 import { SkillsForm } from "./forms/skills-form";
 import { ProjectsForm } from "./forms/projects-form";
+import { VolunteeringForm } from "./forms/volunteering-form";
+import { CertificationsForm } from "./forms/certifications-form";
+import { AwardsForm } from "./forms/awards-form";
+import { LanguagesForm } from "./forms/languages-form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { resumeContentSchema } from "@/lib/validations";
+import { SectionReorder } from "./section-reorder";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface EditorProps {
     resume: {
@@ -30,10 +35,6 @@ interface EditorProps {
     };
 }
 
-import { SectionReorder } from "./section-reorder";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { LayoutList } from "lucide-react";
-
 export function Editor({ resume }: EditorProps) {
     const defaultValues = resume.content as ResumeContent || {
         personalInfo: {},
@@ -41,7 +42,11 @@ export function Editor({ resume }: EditorProps) {
         education: [],
         skills: [],
         projects: [],
-        sectionOrder: ["experience", "education", "projects", "skills"]
+        volunteering: [],
+        certifications: [],
+        awards: [],
+        languages: [],
+        sectionOrder: ["experience", "education", "projects", "skills", "volunteering", "certifications", "awards", "languages"]
     };
     
     // Normalize data to ensure types match schema (e.g. current: boolean)
@@ -53,8 +58,14 @@ export function Editor({ resume }: EditorProps) {
     }
     
     if (!defaultValues.sectionOrder) {
-        defaultValues.sectionOrder = ["experience", "education", "projects", "skills"];
+        defaultValues.sectionOrder = ["experience", "education", "projects", "skills", "volunteering", "certifications", "awards", "languages"];
     }
+
+    // Ensure all arrays exist
+    if (!defaultValues.volunteering) defaultValues.volunteering = [];
+    if (!defaultValues.certifications) defaultValues.certifications = [];
+    if (!defaultValues.awards) defaultValues.awards = [];
+    if (!defaultValues.languages) defaultValues.languages = [];
 
     const form = useForm<ResumeContent>({
         resolver: zodResolver(resumeContentSchema),
@@ -64,10 +75,10 @@ export function Editor({ resume }: EditorProps) {
     const [isSaving, setIsSaving] = useState(false);
     const [templateId, setTemplateId] = useState(resume.templateId || 'modern');
 
-    const { watch, handleSubmit, setValue } = form; // Added setValue
+    const { watch, handleSubmit, setValue } = form; 
     const formValues = watch(); // Watch all values for preview and autosave
     
-    // Autosave logic (unchanged)
+    // Autosave logic
     const debouncedContent = useDebounce(formValues, 1000);
 
     const handleTemplateChange = async (val: string) => {
@@ -127,7 +138,7 @@ export function Editor({ resume }: EditorProps) {
                                 <h4 className="font-medium mb-1 leading-none">Reorder Sections</h4>
                                 <p className="text-xs text-muted-foreground mb-3">Drag items to reorder. Saves automatically.</p>
                                 <SectionReorder 
-                                    order={watch("sectionOrder") || ["experience", "education", "projects", "skills"]} 
+                                    order={watch("sectionOrder") || ["experience", "education", "projects", "skills", "volunteering", "certifications", "awards", "languages"]} 
                                     onOrderChange={(newOrder) => setValue("sectionOrder", newOrder, { shouldDirty: true })} 
                                 />
                             </PopoverContent>
@@ -161,7 +172,7 @@ export function Editor({ resume }: EditorProps) {
                                     </AccordionContent>
                                 </AccordionItem>
                                 
-                                {(formValues.sectionOrder || ["experience", "education", "projects", "skills"]).map((section) => {
+                                {(formValues.sectionOrder || ["experience", "education", "projects", "skills", "volunteering", "certifications", "awards", "languages"]).map((section) => {
                                     switch (section) {
                                         case "experience":
                                             return (
@@ -196,6 +207,42 @@ export function Editor({ resume }: EditorProps) {
                                                     <AccordionTrigger>Projects</AccordionTrigger>
                                                     <AccordionContent>
                                                         <ProjectsForm />
+                                                    </AccordionContent>
+                                                </AccordionItem>
+                                            );
+                                        case "volunteering":
+                                            return (
+                                                <AccordionItem key="volunteering" value="volunteering">
+                                                    <AccordionTrigger>Volunteering</AccordionTrigger>
+                                                    <AccordionContent>
+                                                        <VolunteeringForm />
+                                                    </AccordionContent>
+                                                </AccordionItem>
+                                            );
+                                        case "certifications":
+                                            return (
+                                                <AccordionItem key="certifications" value="certifications">
+                                                    <AccordionTrigger>Certifications</AccordionTrigger>
+                                                    <AccordionContent>
+                                                        <CertificationsForm />
+                                                    </AccordionContent>
+                                                </AccordionItem>
+                                            );
+                                        case "awards":
+                                            return (
+                                                <AccordionItem key="awards" value="awards">
+                                                    <AccordionTrigger>Awards</AccordionTrigger>
+                                                    <AccordionContent>
+                                                        <AwardsForm />
+                                                    </AccordionContent>
+                                                </AccordionItem>
+                                            );
+                                        case "languages":
+                                            return (
+                                                <AccordionItem key="languages" value="languages">
+                                                    <AccordionTrigger>Languages</AccordionTrigger>
+                                                    <AccordionContent>
+                                                        <LanguagesForm />
                                                     </AccordionContent>
                                                 </AccordionItem>
                                             );

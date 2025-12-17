@@ -1,7 +1,7 @@
 import { ResumeContent } from "@/lib/validations";
 
 export function ModernTemplate({ content }: { content: ResumeContent }) {
-    const { personalInfo, experience, education, skills, projects, sectionOrder } = content;
+    const { personalInfo, experience, education, skills, projects, volunteering, certifications, awards, languages, sectionOrder } = content;
     const order = sectionOrder || ["experience", "projects", "education", "skills"];
 
     const renderSection = (section: string) => {
@@ -77,6 +77,82 @@ export function ModernTemplate({ content }: { content: ResumeContent }) {
                                 <span key={skill.id} className="px-2 py-1 bg-slate-100 text-slate-800 text-xs font-semibold rounded-sm border border-slate-200">
                                     {skill.name}
                                 </span>
+                            ))}
+                        </div>
+                    </section>
+                );
+            case "volunteering":
+                if (!volunteering?.length) return null;
+                return (
+                    <section key="volunteering" className="mb-8">
+                        <h2 className="text-lg font-bold uppercase tracking-widest text-slate-900 mb-4 border-b border-slate-200 pb-1">Volunteering</h2>
+                        <div className="space-y-4">
+                            {volunteering.map(vol => (
+                                <div key={vol.id}>
+                                    <div className="flex justify-between items-baseline mb-1">
+                                        <h3 className="font-bold text-slate-900">{vol.role}</h3>
+                                        <span className="text-xs text-slate-500">
+                                            {vol.startDate} – {vol.current ? "Present" : vol.endDate}
+                                        </span>
+                                    </div>
+                                    <div className="text-sm font-medium text-slate-700 mb-1">{vol.organization}</div>
+                                    <p className="text-sm text-slate-600 leading-relaxed">{vol.description}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                );
+            case "certifications":
+                if (!certifications?.length) return null;
+                return (
+                    <section key="certifications" className="mb-8">
+                        <h2 className="text-lg font-bold uppercase tracking-widest text-slate-900 mb-4 border-b border-slate-200 pb-1">Certifications</h2>
+                        <div className="space-y-3">
+                            {certifications.map(cert => (
+                                <div key={cert.id} className="flex justify-between items-start">
+                                    <div>
+                                        <h3 className="font-bold text-slate-900 text-sm">{cert.name}</h3>
+                                        <div className="text-slate-600 text-xs">{cert.issuer}</div>
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-xs text-slate-500">{cert.date}</div>
+                                        {cert.url && <a href={cert.url} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:underline">Link</a>}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                );
+            case "awards":
+                if (!awards?.length) return null;
+                return (
+                    <section key="awards" className="mb-8">
+                        <h2 className="text-lg font-bold uppercase tracking-widest text-slate-900 mb-4 border-b border-slate-200 pb-1">Awards</h2>
+                        <div className="space-y-3">
+                            {awards.map(award => (
+                                <div key={award.id}>
+                                    <div className="flex justify-between items-baseline">
+                                        <h3 className="font-bold text-slate-900 text-sm">{award.title}</h3>
+                                        <span className="text-xs text-slate-500">{award.date}</span>
+                                    </div>
+                                    <div className="text-xs text-slate-600 font-medium">{award.issuer}</div>
+                                    {award.description && <p className="text-sm text-slate-600 mt-1">{award.description}</p>}
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                );
+            case "languages":
+                if (!languages?.length) return null;
+                return (
+                    <section key="languages" className="mb-8">
+                        <h2 className="text-lg font-bold uppercase tracking-widest text-slate-900 mb-4 border-b border-slate-200 pb-1">Languages</h2>
+                        <div className="grid grid-cols-2 gap-4">
+                            {languages.map(lang => (
+                                <div key={lang.id} className="flex justify-between border-b border-slate-100 pb-1">
+                                    <span className="text-sm font-semibold text-slate-800">{lang.language}</span>
+                                    <span className="text-sm text-slate-600">{lang.proficiency}</span>
+                                </div>
                             ))}
                         </div>
                     </section>
