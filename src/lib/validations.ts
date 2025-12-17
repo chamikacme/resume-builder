@@ -6,6 +6,9 @@ export const personalInfoSchema = z.object({
   phone: z.string().optional(),
   address: z.string().optional(),
   summary: z.string().optional(),
+  linkedin: z.string().url("Invalid LinkedIn URL").optional().or(z.literal('')),
+  github: z.string().url("Invalid GitHub URL").optional().or(z.literal('')),
+  website: z.string().url("Invalid Website URL").optional().or(z.literal('')),
 });
 
 export const experienceSchema = z.object({

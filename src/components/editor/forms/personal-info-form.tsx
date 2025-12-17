@@ -45,6 +45,34 @@ export function PersonalInfoForm() {
                     />
                 </div>
             </div>
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <Label htmlFor="linkedin">LinkedIn</Label>
+                    <Input 
+                        id="linkedin" 
+                        {...register("personalInfo.linkedin")} 
+                        placeholder="https://linkedin.com/in/username"
+                    />
+                </div>
+                 <div className="space-y-2">
+                    <Label htmlFor="github">GitHub</Label>
+                    <Input 
+                        id="github" 
+                        {...register("personalInfo.github")} 
+                        placeholder="https://github.com/username"
+                    />
+                </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <Label htmlFor="website">Website / Portfolio</Label>
+                    <Input 
+                        id="website" 
+                        {...register("personalInfo.website")} 
+                        placeholder="https://yourwebsite.com"
+                    />
+                </div>
+            </div>
             <div className="space-y-2">
                 <Label htmlFor="summary">Professional Summary</Label>
                 <Textarea 

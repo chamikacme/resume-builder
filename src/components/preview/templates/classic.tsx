@@ -13,18 +13,18 @@ export function ClassicTemplate({ content }: { content: ResumeContent }) {
                         <h2 className="text-lg font-bold uppercase border-b border-black mb-3">Professional Experience</h2>
                         <div className="space-y-4">
                             {experience.map(exp => (
-                                <div key={exp.id}>
-                                    <div className="flex justify-between items-baseline font-bold">
-                                        <h3>{exp.title}</h3>
-                                        <span className="text-sm">
-                                            {exp.startDate} – {exp.current ? "Present" : exp.endDate}
-                                        </span>
-                                    </div>
-                                    <div className="italic mb-1">{exp.company}</div>
-                                    <p className="text-sm text-justify whitespace-pre-line">
-                                        {exp.description}
-                                    </p>
-                                </div>
+                                 <div key={exp.id} className="break-inside-avoid">
+                                     <div className="flex justify-between items-baseline font-bold">
+                                         <h3>{exp.title}</h3>
+                                         <span className="text-sm">
+                                             {exp.startDate} – {exp.current ? "Present" : exp.endDate}
+                                         </span>
+                                     </div>
+                                     <div className="italic mb-1">{exp.company}</div>
+                                     <p className="text-sm text-justify whitespace-pre-line">
+                                         {exp.description}
+                                     </p>
+                                 </div>
                             ))}
                         </div>
                     </section>
@@ -36,7 +36,7 @@ export function ClassicTemplate({ content }: { content: ResumeContent }) {
                         <h2 className="text-lg font-bold uppercase border-b border-black mb-3">Projects</h2>
                         <div className="space-y-3">
                             {projects.map(proj => (
-                                <div key={proj.id}>
+                                <div key={proj.id} className="break-inside-avoid">
                                     <div className="flex justify-between items-baseline font-bold">
                                         <h3>{proj.name}</h3>
                                         {proj.url && <a href={proj.url} className="text-xs underline text-blue-800">Link</a>}
@@ -56,7 +56,7 @@ export function ClassicTemplate({ content }: { content: ResumeContent }) {
                         <h2 className="text-lg font-bold uppercase border-b border-black mb-3">Education</h2>
                         <div className="space-y-2">
                             {education.map(edu => (
-                                <div key={edu.id}>
+                                <div key={edu.id} className="break-inside-avoid">
                                     <div className="flex justify-between items-baseline font-bold">
                                         <h3>{edu.institution}</h3>
                                         <span className="text-sm font-normal">
@@ -74,7 +74,7 @@ export function ClassicTemplate({ content }: { content: ResumeContent }) {
             case "skills":
                 if (!skills?.length) return null;
                 return (
-                    <section key="skills" className="mb-6">
+                    <section key="skills" className="mb-6 break-inside-avoid">
                         <h2 className="text-lg font-bold uppercase border-b border-black mb-3">Key Skills</h2>
                         <p className="text-sm leading-relaxed">
                             {skills.map(s => s.name).join(' • ')}
@@ -88,7 +88,7 @@ export function ClassicTemplate({ content }: { content: ResumeContent }) {
                         <h2 className="text-lg font-bold uppercase border-b border-black mb-3">Volunteering</h2>
                         <div className="space-y-4">
                             {volunteering.map(vol => (
-                                <div key={vol.id}>
+                                <div key={vol.id} className="break-inside-avoid">
                                     <div className="flex justify-between items-baseline font-bold">
                                         <h3>{vol.role}</h3>
                                         <span className="text-sm font-normal">
@@ -111,7 +111,7 @@ export function ClassicTemplate({ content }: { content: ResumeContent }) {
                         <h2 className="text-lg font-bold uppercase border-b border-black mb-3">Certifications</h2>
                         <div className="space-y-2">
                             {certifications.map(cert => (
-                                <div key={cert.id}>
+                                <div key={cert.id} className="break-inside-avoid">
                                     <div className="flex justify-between items-baseline font-bold">
                                         <h3>{cert.name}</h3>
                                         <span className="text-sm font-normal">{cert.date}</span>
@@ -131,7 +131,7 @@ export function ClassicTemplate({ content }: { content: ResumeContent }) {
                         <h2 className="text-lg font-bold uppercase border-b border-black mb-3">Honors & Awards</h2>
                         <div className="space-y-3">
                             {awards.map(award => (
-                                <div key={award.id}>
+                                <div key={award.id} className="break-inside-avoid">
                                     <div className="flex justify-between items-baseline font-bold">
                                         <h3>{award.title}</h3>
                                         <span className="text-sm font-normal">{award.date}</span>
@@ -146,7 +146,7 @@ export function ClassicTemplate({ content }: { content: ResumeContent }) {
             case "languages":
                 if (!languages?.length) return null;
                 return (
-                    <section key="languages" className="mb-6">
+                    <section key="languages" className="mb-6 break-inside-avoid">
                         <h2 className="text-lg font-bold uppercase border-b border-black mb-3">Languages</h2>
                         <p className="text-sm leading-relaxed">
                             {languages.map(lang => `${lang.language}${lang.proficiency ? ` (${lang.proficiency})` : ''}`).join(', ')}
@@ -159,14 +159,29 @@ export function ClassicTemplate({ content }: { content: ResumeContent }) {
     };
 
     return (
-        <div className="w-full h-full p-12 bg-white text-black font-serif min-h-[297mm] leading-relaxed">
+        <div className="w-full h-auto p-12 bg-white text-black font-serif min-h-[297mm] leading-relaxed">
             {/* Header */}
              <div className="text-center border-b border-black pb-4 mb-6">
                 <h1 className="text-3xl font-bold uppercase tracking-widest mb-2">{personalInfo?.fullName || "Your Name"}</h1>
-                <div className="flex justify-center gap-4 text-sm">
+                <div className="flex justify-center flex-wrap gap-x-4 gap-y-1 text-sm">
                     {personalInfo?.email && <span>{personalInfo.email}</span>}
                     {personalInfo?.phone && <span>• {personalInfo.phone}</span>}
                     {personalInfo?.address && <span>• {personalInfo.address}</span>}
+                    {personalInfo?.linkedin && (
+                        <span>
+                            • <a href={personalInfo.linkedin} target="_blank" rel="noreferrer" className="underline text-blue-800">LinkedIn</a>
+                        </span>
+                    )}
+                    {personalInfo?.github && (
+                        <span>
+                            • <a href={personalInfo.github} target="_blank" rel="noreferrer" className="underline text-blue-800">GitHub</a>
+                        </span>
+                    )}
+                    {personalInfo?.website && (
+                        <span>
+                            • <a href={personalInfo.website} target="_blank" rel="noreferrer" className="underline text-blue-800">Website</a>
+                        </span>
+                    )}
                 </div>
             </div>
 

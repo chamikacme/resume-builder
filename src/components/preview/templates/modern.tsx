@@ -13,7 +13,7 @@ export function ModernTemplate({ content }: { content: ResumeContent }) {
                         <h2 className="text-lg font-bold uppercase tracking-widest text-slate-900 mb-4 border-b border-slate-200 pb-1">Experience</h2>
                         <div className="space-y-6">
                             {experience.map(exp => (
-                                <div key={exp.id}>
+                                 <div key={exp.id} className="break-inside-avoid">
                                     <div className="flex justify-between items-baseline mb-1">
                                         <h3 className="font-bold text-base text-slate-900">{exp.title}</h3>
                                         <span className="text-xs font-semibold text-slate-500 whitespace-nowrap bg-slate-100 px-2 py-0.5 rounded">
@@ -36,7 +36,7 @@ export function ModernTemplate({ content }: { content: ResumeContent }) {
                          <h2 className="text-lg font-bold uppercase tracking-widest text-slate-900 mb-4 border-b border-slate-200 pb-1">Projects</h2>
                          <div className="space-y-4">
                             {projects.map(proj => (
-                                <div key={proj.id}>
+                                <div key={proj.id} className="break-inside-avoid">
                                      <div className="flex justify-between items-baseline mb-1">
                                         <h3 className="font-bold text-slate-900">{proj.name}</h3>
                                         {proj.url && (
@@ -53,10 +53,10 @@ export function ModernTemplate({ content }: { content: ResumeContent }) {
                 if (!education?.length) return null;
                 return (
                     <section key="education" className="mb-8">
-                        <h2 className="text-lg font-bold uppercase tracking-widest text-slate-900 mb-4 border-b border-slate-200 pb-1">Education</h2>
-                        <div className="space-y-4">
+                         <h2 className="text-lg font-bold uppercase tracking-widest text-slate-900 mb-4 border-b border-slate-200 pb-1">Education</h2>
+                         <div className="space-y-4">
                             {education.map(edu => (
-                                <div key={edu.id}>
+                                <div key={edu.id} className="break-inside-avoid">
                                     <h3 className="font-bold text-slate-900">{edu.institution}</h3>
                                     <div className="text-sm text-slate-700">{edu.degree} {edu.field && `in ${edu.field}`}</div>
                                     <div className="text-sm text-slate-500 mt-1">
@@ -64,13 +64,13 @@ export function ModernTemplate({ content }: { content: ResumeContent }) {
                                     </div>
                                 </div>
                             ))}
-                        </div>
+                         </div>
                     </section>
                 );
             case "skills":
                 if (!skills?.length) return null;
                  return (
-                     <section key="skills" className="mb-8">
+                     <section key="skills" className="mb-8 break-inside-avoid">
                         <h2 className="text-lg font-bold uppercase tracking-widest text-slate-900 mb-4 border-b border-slate-200 pb-1">Skills</h2>
                         <div className="flex flex-wrap gap-2">
                             {skills.map(skill => (
@@ -88,7 +88,7 @@ export function ModernTemplate({ content }: { content: ResumeContent }) {
                         <h2 className="text-lg font-bold uppercase tracking-widest text-slate-900 mb-4 border-b border-slate-200 pb-1">Volunteering</h2>
                         <div className="space-y-4">
                             {volunteering.map(vol => (
-                                <div key={vol.id}>
+                                <div key={vol.id} className="break-inside-avoid">
                                     <div className="flex justify-between items-baseline mb-1">
                                         <h3 className="font-bold text-slate-900">{vol.role}</h3>
                                         <span className="text-xs text-slate-500">
@@ -109,7 +109,7 @@ export function ModernTemplate({ content }: { content: ResumeContent }) {
                         <h2 className="text-lg font-bold uppercase tracking-widest text-slate-900 mb-4 border-b border-slate-200 pb-1">Certifications</h2>
                         <div className="space-y-3">
                             {certifications.map(cert => (
-                                <div key={cert.id} className="flex justify-between items-start">
+                                <div key={cert.id} className="flex justify-between items-start break-inside-avoid">
                                     <div>
                                         <h3 className="font-bold text-slate-900 text-sm">{cert.name}</h3>
                                         <div className="text-slate-600 text-xs">{cert.issuer}</div>
@@ -130,7 +130,7 @@ export function ModernTemplate({ content }: { content: ResumeContent }) {
                         <h2 className="text-lg font-bold uppercase tracking-widest text-slate-900 mb-4 border-b border-slate-200 pb-1">Awards</h2>
                         <div className="space-y-3">
                             {awards.map(award => (
-                                <div key={award.id}>
+                                <div key={award.id} className="break-inside-avoid">
                                     <div className="flex justify-between items-baseline">
                                         <h3 className="font-bold text-slate-900 text-sm">{award.title}</h3>
                                         <span className="text-xs text-slate-500">{award.date}</span>
@@ -145,7 +145,7 @@ export function ModernTemplate({ content }: { content: ResumeContent }) {
             case "languages":
                 if (!languages?.length) return null;
                 return (
-                    <section key="languages" className="mb-8">
+                    <section key="languages" className="mb-8 break-inside-avoid">
                         <h2 className="text-lg font-bold uppercase tracking-widest text-slate-900 mb-4 border-b border-slate-200 pb-1">Languages</h2>
                         <div className="grid grid-cols-2 gap-4">
                             {languages.map(lang => (
@@ -163,7 +163,7 @@ export function ModernTemplate({ content }: { content: ResumeContent }) {
     };
 
     return (
-        <div className="w-full h-full p-10 bg-white text-slate-900 font-sans min-h-[297mm]">
+        <div className="w-full h-auto p-10 bg-white text-slate-900 font-sans min-h-[297mm]">
             {/* Header */}
             <header className="border-b-2 border-slate-900 pb-6 mb-8">
                 <h1 className="text-4xl font-bold uppercase tracking-tight mb-3">{personalInfo?.fullName || "Your Name"}</h1>
@@ -171,6 +171,21 @@ export function ModernTemplate({ content }: { content: ResumeContent }) {
                     {personalInfo?.email && <span>{personalInfo.email}</span>}
                     {personalInfo?.phone && <span>{personalInfo.phone}</span>}
                     {personalInfo?.address && <span>{personalInfo.address}</span>}
+                    {personalInfo?.linkedin && (
+                        <a href={personalInfo.linkedin} target="_blank" rel="noreferrer" className="hover:text-blue-600 flex items-center gap-1 transition-colors">
+                            LinkedIn
+                        </a>
+                    )}
+                    {personalInfo?.github && (
+                        <a href={personalInfo.github} target="_blank" rel="noreferrer" className="hover:text-slate-900 flex items-center gap-1 transition-colors">
+                            GitHub
+                        </a>
+                    )}
+                    {personalInfo?.website && (
+                        <a href={personalInfo.website} target="_blank" rel="noreferrer" className="hover:text-emerald-600 flex items-center gap-1 transition-colors">
+                            Website
+                        </a>
+                    )}
                 </div>
                 {personalInfo?.summary && (
                     <p className="text-slate-800 leading-relaxed max-w-prose text-sm text-justify">
