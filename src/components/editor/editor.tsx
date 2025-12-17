@@ -74,6 +74,8 @@ export function Editor({ resume }: EditorProps) {
 
     const [isSaving, setIsSaving] = useState(false);
     const [templateId, setTemplateId] = useState(resume.templateId || 'modern');
+    const [isEditingTitle, setIsEditingTitle] = useState(false);
+    const [editedTitle, setEditedTitle] = useState(resume.title);
 
     const { watch, handleSubmit, setValue } = form; 
     const formValues = watch(); // Watch all values for preview and autosave
@@ -88,6 +90,31 @@ export function Editor({ resume }: EditorProps) {
             toast.success("Template changed");
         } catch {
             toast.error("Failed to update template");
+        }
+    };
+
+    const handleTitleSave = async () => {
+        const trimmedTitle = editedTitle.trim();
+        if (!trimmedTitle) {
+            toast.error("Title cannot be empty");
+            setEditedTitle(resume.title);
+            setIsEditingTitle(false);
+            return;
+        }
+
+        if (trimmedTitle === resume.title) {
+            setIsEditingTitle(false);
+            return;
+        }
+
+        try {
+            await updateResume(resume.id, { title: trimmedTitle });
+            toast.success("Resume renamed");
+            setIsEditingTitle(false);
+        } catch {
+            toast.error("Failed to rename resume");
+            setEditedTitle(resume.title);
+            setIsEditingTitle(false);
         }
     };
 
@@ -120,7 +147,30 @@ export function Editor({ resume }: EditorProps) {
                             </Button>
                         </Link>
                         <div className="flex flex-col">
-                            <h1 className="font-semibold text-lg leading-tight">{resume.title}</h1>
+                            {isEditingTitle ? (
+                                <input
+                                    type="text"
+                                    value={editedTitle}
+                                    onChange={(e) => setEditedTitle(e.target.value)}
+                                    onBlur={handleTitleSave}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") handleTitleSave();
+                                        if (e.key === "Escape") {
+                                            setEditedTitle(resume.title);
+                                            setIsEditingTitle(false);
+                                        }
+                                    }}
+                                    className="font-semibold text-lg leading-tight border-b-2 border-primary focus:outline-none bg-transparent"
+                                    autoFocus
+                                />
+                            ) : (
+                                <h1 
+                                    className="font-semibold text-lg leading-tight cursor-pointer hover:text-primary transition-colors"
+                                    onClick={() => setIsEditingTitle(true)}
+                                >
+                                    {resume.title}
+                                </h1>
+                            )}
                             <span className="text-xs text-muted-foreground flex items-center gap-1">
                                 {isSaving ? <><Loader2 className="h-3 w-3 animate-spin"/> Saving...</> : "All changes saved"}
                             </span>

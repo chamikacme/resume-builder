@@ -2,10 +2,13 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, FileText, Trash2, Copy, Pencil, Loader2 } from "lucide-react";
+import { MoreVertical, FileText, Trash2, Copy, Pencil, Loader2, FileEdit } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { deleteResume, duplicateResume } from "@/app/actions/resume";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { deleteResume, duplicateResume, updateResume } from "@/app/actions/resume";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -19,6 +22,9 @@ interface Resume {
 export function ResumeCard({ resume }: { resume: Resume }) {
     const [isDeleting, setIsDeleting] = useState(false);
     const [isDuplicating, setIsDuplicating] = useState(false);
+    const [isRenaming, setIsRenaming] = useState(false);
+    const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
+    const [newTitle, setNewTitle] = useState(resume.title);
 
     const handleDelete = async () => {
         setIsDeleting(true);
@@ -44,6 +50,29 @@ export function ResumeCard({ resume }: { resume: Resume }) {
         }
     };
 
+    const handleRename = async () => {
+        if (!newTitle.trim()) {
+            toast.error("Resume title cannot be empty");
+            return;
+        }
+        
+        if (newTitle === resume.title) {
+            setIsRenameDialogOpen(false);
+            return;
+        }
+
+        setIsRenaming(true);
+        try {
+            await updateResume(resume.id, { title: newTitle.trim() });
+            toast.success("Resume renamed");
+            setIsRenameDialogOpen(false);
+        } catch (error) {
+            toast.error("Failed to rename resume");
+        } finally {
+            setIsRenaming(false);
+        }
+    };
+
     return (
         <Card className="hover:shadow-md transition-shadow group relative">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -64,6 +93,10 @@ export function ResumeCard({ resume }: { resume: Resume }) {
                                     <Pencil className="mr-2 h-4 w-4" />
                                     Edit
                                 </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setIsRenameDialogOpen(true)} className="cursor-pointer">
+                                <FileEdit className="mr-2 h-4 w-4" />
+                                Rename
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={handleDuplicate} disabled={isDuplicating} className="cursor-pointer">
                                 <Copy className="mr-2 h-4 w-4" />
@@ -106,6 +139,44 @@ export function ResumeCard({ resume }: { resume: Resume }) {
                      </span>
                 </Link>
             </CardContent>
+
+            {/* Rename Dialog */}
+            <Dialog open={isRenameDialogOpen} onOpenChange={setIsRenameDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Rename Resume</DialogTitle>
+                        <DialogDescription>
+                            Enter a new name for your resume.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="title">Resume Title</Label>
+                            <Input
+                                id="title"
+                                value={newTitle}
+                                onChange={(e) => setNewTitle(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleRename();
+                                    }
+                                }}
+                                placeholder="Enter resume title"
+                                autoFocus
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsRenameDialogOpen(false)} disabled={isRenaming}>
+                            Cancel
+                        </Button>
+                        <Button onClick={handleRename} disabled={isRenaming || !newTitle.trim()}>
+                            {isRenaming ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                            Rename
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </Card>
     )
 }
